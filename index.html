@@ -110,10 +110,12 @@
 .logo {
     max-width: 100px; /* Ajuster la taille des images selon vos besoins */
     height: auto; /* Maintenir les proportions des images */
+    float: left;
 }
  .regles {
     max-width: 200px; /* Ajuster la taille des images selon vos besoins */
     height: auto; /* Maintenir les proportions des images */
+    float: right;
 }
 
 /* Style pour le titre */
@@ -140,6 +142,34 @@ h1 {
     }
 }
 .regles {width: 100%;}
+
+/* Conteneur pour centrer la table */
+.table-container {
+    display: flex;
+    justify-content: center; /* Centrer horizontalement */
+    align-items: center; /* Centrer verticalement */
+    height: 100vh; /* Prendre toute la hauteur de la fenêtre */
+}
+
+/* Style pour la table */
+.table-signature {
+    width: 100%; /* Largeur maximale de la table */
+    max-width: 800px; /* Largeur maximale pour éviter que la table ne soit trop large */
+    border-collapse: collapse; /* Supprimer les espaces entre les cellules */
+}
+
+/* Style pour les cellules de la table */
+.table-signature td {
+    padding: 10px;
+    border: 1px solid #ccc; /* Bordure des cellules */
+}
+
+/* Style pour les inputs */
+.large-row {
+    width: 100%; /* Largeur maximale des inputs */
+    padding: 10px;
+    box-sizing: border-box; /* Inclure le padding dans la largeur totale */
+}
 
         
   </style>
@@ -180,7 +210,7 @@ h1 {
   <button class="export" onclick="print()">Imprimer / Exporter</button>
   <button class="show-consignes" id="openModalBtn">?</button>
 </div>
-  <table>
+  <table class="table-signature">
     <tr >
         <td><input class="large-row" type="text" placeholder="Perception générale du visiteur et signature"></td>
         <td><input class="large-row" type="text" placeholder="Commentaires des personnes rencontrées et signature"></td>
