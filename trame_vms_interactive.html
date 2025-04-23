@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trame VMS Interactive</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1 { text-align: center; }
+    .top-fields { display: flex; gap: 20px; margin-bottom: 20px; }
+    .top-fields label { display: flex; flex-direction: column; font-weight: bold; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    th { background: #f0f0f0; }
+    select, input[type="text"], input[type="date"] { width: 100%; }
+    .PP { background: #e6ffe6; }
+    .CD { background: #fff5e6; }
+    .AD { background: #ffe6e6; }
+    .counters { margin-bottom: 20px; }
+    .counters span { margin-right: 15px; font-weight: bold; }
+    button { padding: 8px 12px; border: none; border-radius: 4px; cursor: pointer; }
+    .add-row { background: #4CAF50; color: white; }
+    .show-consignes { background: #d3c30d; color: white; }
+    .remove-row { background: #f44336; color: white; }
+    .export { background: #2196F3; color: white; float: right; }
+    .abreviations { color: #f44336; font-size: smaller;}
+    .logo {width: 100px;}
+    .large-row {height: 100px;}
+    .buttons {margin-bottom: 10px;}
+    .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            margin: 15% auto;
+            padding: 20px;
+            width: 80%;
+            background-color: #fefefe;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+  </style>
+</head>
+<body>
+  <img class="logo" src="CDES_Logo.png" alt="">
+  <h1>Compte-rendu VMS</h1>
+  <div class="top-fields">
+    <label>Date:<input type="date" id="visite-date" value=""></label>
+    <label>Chantier:<input type="text" id="chantier" placeholder="Nom du chantier"></label>
+    <label>Conducteur de travaux:<input type="text" id="visiteur" placeholder="Nom / Fonction"></label>
+  </div>
+  <div class="counters">
+    <span>PP 👍: <span id="count-PP">0</span></span>
+    <span>CD ⚠️: <span id="count-CD">0</span></span>
+    <span>AD 🚫: <span id="count-AD">0</span></span>
+  </div>
+  <table id="obs-table">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Gravité</th>
+        <th>Action</th>
+        <th>Responsable</th>
+        <th>Échéance</th>
+        <th>Statut</th>
+        <th>Suppr.</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <div class="buttons">
+  <button class="add-row" onclick="addRow()">Ajouter une observation</button>
+  <button class="show-consignes" id="openModalBtn">Consignes</button>
+  <button class="export" onclick="print()">Imprimer / Exporter</button>
+</div>
+  <table>
+    <tr>
+        <th>Perception générale du visiteur et signature</th>
+        <th>Commentaires des personnes rencontrées et signature</th>
+    </tr>
+    <tr class="large-row">
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+
+  <ul class="abreviations">
+    <li>PP : Point Positif</li>
+    <li>AD : Acte Dangereux : téléphoner en conduisant, opération de travail sans EPI </li>
+    <li>CD : Condition dangereuse : une consigne pas à jour, des trous dans le sol, absence de balisage </li>
+  </ul>
+  <!-- Structure de la modale -->
+<div id="imageModal" class="modal">
+  <div class="modal-content">
+      <img id="modalImage" src="" alt="Image modale">
+      <span class="close">&times;</span>
+  </div>
+</div>
+
+  <script>
+    function updateCounters() {
+      const rows = document.querySelectorAll('#obs-table tbody tr');
+      let cPP = 0, cCD = 0, cAD = 0;
+      rows.forEach(r => {
+        const type = r.querySelector('.type-select').value;
+        if (type === 'PP') cPP++;
+        if (type === 'CD') cCD++;
+        if (type === 'AD') cAD++;
+      });
+      document.getElementById('count-PP').textContent = cPP;
+      document.getElementById('count-CD').textContent = cCD;
+      document.getElementById('count-AD').textContent = cAD;
+    }
+    function addRow() {
+      const tbody = document.querySelector('#obs-table tbody');
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><select class="type-select" onchange="applyColor(this); updateCounters()">
+          <option value="PP">PP 👍</option>
+          <option value="CD">CD ⚠️</option>
+          <option value="AD">AD 🚫</option>
+        </select></td>
+        <td><input type="text" placeholder="Description"></td>
+        <td><select><option>Mineure</option><option>Majeure</option><option>Critique</option></select></td>
+        <td><input type="text" placeholder="Action à mener"></td>
+        <td><input type="text" placeholder="Responsable"></td>
+        <td><input type="date"></td>
+        <td><select><option>À planifier</option><option>En cours</option><option>Clôturée</option></select></td>
+        <td><button class="remove-row" onclick="removeRow(this)">✖</button></td>
+      `;
+      tbody.appendChild(tr);
+      applyColor(tr.querySelector('.type-select'));
+      updateCounters();
+    }
+    function removeRow(btn) {
+      btn.closest('tr').remove();
+      updateCounters();
+    }
+    function applyColor(select) {
+      const row = select.closest('tr');
+      row.classList.remove('PP', 'CD', 'AD');
+      row.classList.add(select.value);
+    }
+
+      // Fonction pour ouvrir la modale
+      function openModal(imageUrl) {
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        modal.style.display = 'block';
+        modalImg.src = imageUrl;
+    }
+
+    // Fonction pour fermer la modale
+    function closeModal() {
+        const modal = document.getElementById('imageModal');
+        modal.style.display = 'none';
+    }
+
+    // Écouteur d'événement pour le bouton d'ouverture
+    document.getElementById('openModalBtn').onclick = function() {
+        openModal('regles.png');
+    };
+
+    // Écouteur d'événement pour le bouton de fermeture
+    document.getElementsByClassName('close')[0].onclick = function() {
+        closeModal();
+    };
+
+    // Fermer la modale si l'utilisateur clique en dehors de l'image
+    window.onclick = function(event) {
+        const modal = document.getElementById('imageModal');
+        if (event.target == modal) {
+            closeModal();
+        }
+    };
+
+    window.onload = function() {
+      addRow();
+      document.getElementById('visite-date').valueAsDate = new Date();
+    }
+  </script>
+</body>
+</html>
