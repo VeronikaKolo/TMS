@@ -22,10 +22,9 @@
     .add-row { background: #4CAF50; color: white; }
     .show-consignes { background: #d3c30d; color: white; }
     .remove-row { background: #f44336; color: white; }
-    .export { background: #2196F3; color: white; float: right; }
+    .export { background: #2196F3; color: white; }
     .abreviations { color: #f44336; font-size: smaller;}
     .logo {width: 100px;}
-    .large-row {height: 100px;}
     .buttons {margin-bottom: 10px;}
     .modal {
             display: none;
@@ -57,6 +56,11 @@
             text-decoration: none;
             cursor: pointer;
         }
+    .large-row {
+      height: 50px;
+    }
+
+        
   </style>
 </head>
 <body>
@@ -93,13 +97,9 @@
   <button class="export" onclick="print()">Imprimer / Exporter</button>
 </div>
   <table>
-    <tr>
-        <th>Perception générale du visiteur et signature</th>
-        <th>Commentaires des personnes rencontrées et signature</th>
-    </tr>
-    <tr class="large-row">
-        <td></td>
-        <td></td>
+    <tr >
+        <td><input class="large-row" type="text" placeholder="Perception générale du visiteur et signature"></td>
+        <td><input class="large-row" type="text" placeholder="Commentaires des personnes rencontrées et signature"></td>
     </tr>
 </table>
 
