@@ -24,7 +24,7 @@
     .remove-row { background: #f44336; color: white; }
     .export { background: #2196F3; color: white; }
     .abreviations { color: #f44336; font-size: smaller;}
-    .logo {width: 100px;}
+    .logo { width: 100px;}
     .buttons {margin-bottom: 10px;}
     .modal {
             display: none;
@@ -58,7 +58,28 @@
         }
     .large-row {
       height: 50px;
+      display: flex;
     }
+    .picto {
+      width: 50px;
+    }
+    input::placeholder {
+    font-size: 1rem; /* Taille par défaut */
+}
+
+/* Pour les écrans de largeur inférieure à 600px */
+@media (max-width: 600px) {
+    input::placeholder {
+        font-size: 0.75rem; /* Taille plus petite pour les petits écrans */
+    }
+}
+
+/* Pour les écrans de largeur supérieure à 1200px */
+@media (min-width: 1200px) {
+    input::placeholder {
+        font-size: 1.0rem; /* Taille plus grande pour les grands écrans */
+    }
+}
 
         
   </style>
@@ -81,7 +102,7 @@
       <tr>
         <th>Type</th>
         <th>Description</th>
-        <th>Gravité</th>
+        <th>Regles qui sauvent</th>
         <th>Action</th>
         <th>Responsable</th>
         <th>Échéance</th>
@@ -103,15 +124,15 @@
     </tr>
 </table>
 
-  <ul class="abreviations">
-    <li>PP : Point Positif</li>
-    <li>AD : Acte Dangereux : téléphoner en conduisant, opération de travail sans EPI </li>
-    <li>CD : Condition dangereuse : une consigne pas à jour, des trous dans le sol, absence de balisage </li>
-  </ul>
   <!-- Structure de la modale -->
 <div id="imageModal" class="modal">
   <div class="modal-content">
       <img id="modalImage" src="" alt="Image modale">
+      <ul class="abreviations">
+        <li>PP : Point Positif</li>
+        <li>AD : Acte Dangereux : téléphoner en conduisant, opération de travail sans EPI </li>
+        <li>CD : Condition dangereuse : une consigne pas à jour, des trous dans le sol, absence de balisage </li>
+      </ul>
       <span class="close">&times;</span>
   </div>
 </div>
@@ -140,7 +161,18 @@
           <option value="AD">AD 🚫</option>
         </select></td>
         <td><input type="text" placeholder="Description"></td>
-        <td><select><option>Mineure</option><option>Majeure</option><option>Critique</option></select></td>
+        <td><select class="type-select">
+          <option value="1"> <img class="picto" src="CDES-ReglesOr-SeriePictos-F-01.png" alt="Image modale"></option>
+          <option value="2"> <img class="picto" src="CDES-ReglesOr-SeriePictos-F-02.png" alt="Image modale"></option>
+          <option value="3"> <img class="picto" src="CDES-ReglesOr-SeriePictos-F-03.png" alt="Image modale"></option>
+          <option value="4"> <img class="picto" src="CDES-ReglesOr-SeriePictos-F-04.png" alt="Image modale"></option>
+          <option value="5"> <img class="picto" src="CDES-ReglesOr-SeriePictos-F-05.png" alt="Image modale"></option>
+          <option value="6"> <img class="picto" src="CDES-ReglesOr-SeriePictos-F-06.png" alt="Image modale"></option>
+          <option value="7"> <img class="picto" src="CDES-ReglesOr-SeriePictos-F-07.png" alt="Image modale"></option>
+          <option value="8"> <img class="picto" src="CDES-ReglesOr-SeriePictos-F-08.png" alt="Image modale"></option>
+          <option value="9"> <img class="picto" src="CDES-ReglesOr-SeriePictos-F-09.png" alt="Image modale"></option>
+          <option value="10"> <img class="picto" src="CDES-ReglesOr-SeriePictos-F-10.png" alt="Image modale"></option>
+        </select></td>
         <td><input type="text" placeholder="Action à mener"></td>
         <td><input type="text" placeholder="Responsable"></td>
         <td><input type="date"></td>
