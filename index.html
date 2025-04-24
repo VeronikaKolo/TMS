@@ -195,8 +195,9 @@
       /* Aligner les éléments verticalement au centre */
       justify-content: space-between;
       /* Espacer les éléments uniformément */
-      padding: 10px;
       /* Ajouter un peu de padding autour du conteneur */
+      margin-bottom: 50px;
+      background-color: rgb(116, 204, 239);
     }
 
     /* Styles pour les images */
@@ -207,11 +208,22 @@
       /* Maintenir les proportions des images */
     }
 
-    .regles {
-      max-width: 250px;
-      /* Ajuster la taille des images selon vos besoins */
-      height: auto;
-      /* Maintenir les proportions des images */
+    @media (max-width: 600px) {
+      .regles {
+        max-width: 250px;
+        /* Ajuster la taille des images selon vos besoins */
+        height: auto;
+        /* Maintenir les proportions des images */
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .regles {
+        max-width: 500px;
+        /* Ajuster la taille des images selon vos besoins */
+        height: auto;
+        /* Maintenir les proportions des images */
+      }
     }
 
     /* Style pour le titre */
@@ -288,8 +300,25 @@
     <button class="export" onclick="print()">Imprimer / Exporter</button>
   </div>
   <table>
-    <th>Perception générale du visiteur et signature</th>
-    <th>Commentaires des personnes rencontrées et signature</th>
+    <th>Bilan globale de la VMS</th>
+    <th>Commentaires des collaborateurs</th>
+    <tr>
+      <td>
+        <div class="large-row">
+          <input type="text">
+        </div>
+      </td>
+      <td>
+        <div class="large-row">
+          <input type="text">
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <table>
+    <th>Signature du visiteur</th>
+    <th>Signature Intervenants</th>
     <tr>
       <td>
         <div class="large-row">
@@ -309,6 +338,15 @@
   <!-- Structure de la modale -->
   <div id="imageModal" class="modal">
     <div class="modal-content">
+      <h1> Informations générales</h1>
+      <ul>
+        <li> 3 étapes : Observer/Discuter/Se mettre d’accord </li>
+        <li> Pas de jugements, de réprimandes ou de mesures disciplinaires</li>
+        <li> Se concentrer sur les points positifs et les points à améliorer (3 PP pour 1 AD/CD)</li>
+        <li> Donner la priorité aux actions immédiates</li>
+        <li> Les actions doivent être convenues conjointement entre le visiteur et la personne rencontrée</li>
+        <li> Se concentrer sur les Règles qui Sauvent des vies </li>
+      </ul>
       <ul class="abreviations">
         <li>PP : Point Positif</li>
         <li>AD : Acte Dangereux : téléphoner en conduisant, opération de travail sans EPI </li>
@@ -342,10 +380,10 @@
           <option value="AD">AD 🚫</option>
         </select></td>
         <td><input type="text" placeholder="Description"></td>
-        <td><input type="text" placeholder="Action à mener"></td>
-        <td><input type="text" placeholder="Responsable"></td>
-        <td><input type="date"></td>
-        <td><select id='etatSelect'><option>À planifier</option><option>En cours</option><option>Clôturée</option></select></td>
+        <td><input type="text" class="can-disable" placeholder="Action à mener"></td>
+        <td><input type="text" class="can-disable" placeholder="Responsable"></td>
+        <td><input type="date" class="can-disable" ></td>
+        <td><select class="can-disable"><option>À planifier</option><option>En cours</option><option>Clôturée</option></select></td>
         <td><button class="remove-row" onclick="removeRow(this)">✖</button></td>
       `;
       tbody.appendChild(tr);
@@ -358,14 +396,11 @@
     }
     function toggleInputs(selectElement) {
       const tr = selectElement.closest('tr');
-      const inputs = tr.querySelectorAll('input');
-      const etatSelect = tr.querySelector('#etatSelect'); // ← on cible par ID
+      const inputs = tr.querySelectorAll('.can-disable');
       if (selectElement.value === 'PP') {
         inputs.forEach(input => input.setAttribute('disabled', 'disabled'));
-        if (etatSelect) etatSelect.setAttribute('disabled', 'disabled');
       } else {
         inputs.forEach(input => input.removeAttribute('disabled'));
-        if (etatSelect) etatSelect.removeAttribute('disabled');
       }
     }
     document.addEventListener('DOMContentLoaded', function () {
@@ -456,16 +491,34 @@
         ctx.lineCap = 'round';
         ctx.strokeStyle = '#000';
 
-        ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+        let clientX, clientY;
+        if (e.touches && e.touches.length > 0) {
+          // Utiliser les coordonnées du premier touch point
+          clientX = e.touches[0].clientX;
+          clientY = e.touches[0].clientY;
+        } else {
+          // Utiliser les coordonnées de la souris
+          clientX = e.clientX;
+          clientY = e.clientY;
+        }
+
+        ctx.lineTo(clientX - rect.left, clientY - rect.top);
         ctx.stroke();
         ctx.beginPath();
-        ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+        ctx.moveTo(clientX - rect.left, clientY - rect.top);
       }
 
+      // Ajouter des écouteurs pour les événements de souris
       canvas.addEventListener('mousedown', startPosition);
       canvas.addEventListener('mouseup', endPosition);
       canvas.addEventListener('mouseout', endPosition);
       canvas.addEventListener('mousemove', draw);
+
+      // Ajouter des écouteurs pour les événements tactiles
+      canvas.addEventListener('touchstart', startPosition);
+      canvas.addEventListener('touchend', endPosition);
+      canvas.addEventListener('touchcancel', endPosition);
+      canvas.addEventListener('touchmove', draw);
     }
 
     // Initialisation
