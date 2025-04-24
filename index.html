@@ -174,11 +174,6 @@
       cursor: pointer;
     }
 
-    .large-row {
-      height: 50px;
-      display: flex;
-    }
-
     .picto {
       width: 50px;
     }
@@ -260,6 +255,45 @@
     .regles {
       width: 100%;
     }
+    .aligned-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .aligned-table th, .aligned-table td {
+          
+            width: 40%;
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            box-sizing: border-box; /* Assure que le padding et la bordure sont inclus dans la largeur */
+        }
+
+        .large-row {
+          height: 50px;
+            display: flex;
+            align-items: center;
+        }
+        
+
+        .signature-canvas {
+            flex-grow: 1;
+            border: 1px solid #000;
+        }
+
+        button {
+            margin-left: auto;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            box-sizing: border-box; /* Assure que le padding et la bordure sont inclus dans la largeur */
+        }
+        .input-bilan {
+          height: 50px;
+        }
+
   </style>
 </head>
 
@@ -299,25 +333,25 @@
     <button class="add-row" onclick="addRow()">Ajouter une observation</button>
     <button class="export" onclick="print()">Imprimer / Exporter</button>
   </div>
-  <table>
+  <table class="aligned-table">
     <th>Bilan globale de la VMS</th>
     <th>Commentaires des collaborateurs</th>
     <tr>
       <td>
         <div class="large-row">
-          <input type="text">
+          <input class="input-bilan" type="text">
         </div>
       </td>
       <td>
         <div class="large-row">
-          <input type="text">
+          <input class="input-bilan" type="text">
         </div>
       </td>
     </tr>
   </table>
 
-  <table>
-    <th>Signature du visiteur</th>
+  <table class="aligned-table">
+    <th>Signature Visiteur</th>
     <th>Signature Intervenants</th>
     <tr>
       <td>
